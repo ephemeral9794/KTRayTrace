@@ -48,7 +48,7 @@ class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float =
     // operator*
     operator fun times(other : Color) : Color = Color(this.red * other.red, this.green * other.green, this.blue * other.blue)
     operator fun times(other : Float) : Color = Color(this.red * other, this.green * other, this.blue * other)
-    operator fun Float.times(other: Color) : Color = (this * other)
+    operator fun Float.times(other: Color) : Color = (other * this)
     // operator/
     operator fun div(other : Color) : Color = Color(this.red / other.red, this.green / other.green, this.blue / other.blue)
     operator fun div(other : Float) : Color {

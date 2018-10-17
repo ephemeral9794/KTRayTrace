@@ -1,5 +1,6 @@
 package com.ephemeral.ktraytrace
 
+import kotlin.math.PI
 import kotlin.math.sqrt
 
 fun dot(v1: Vector, v2: Vector): Float = (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z)
@@ -12,6 +13,8 @@ fun unit(v: Vector): Vector {
     val inv = v.inverseLength
     return v * inv
 }
+fun radian(deg: Float): Float = (deg / 180.0f * Math.PI.toFloat())
+fun degree(rad: Float): Float = (rad / PI.toFloat() * 180.0f)
 
 class Vector(var x : Float, var y : Float, var z : Float) {
     companion object {
@@ -23,9 +26,9 @@ class Vector(var x : Float, var y : Float, var z : Float) {
     }
 
     val length : Float
-        get() = sqrt(x * x + y * y + z * z)
+        get() = sqrt(dot(this, this))
     val inverseLength : Float
-        get() = 1.0f / sqrt(x * x + y * y + z * z)
+        get() = 1.0f / sqrt(dot(this, this))
 
     constructor() : this(0.0f, 0.0f, 0.0f)
     constructor(src : Vector) : this(src.x, src.y, src.z)
@@ -55,7 +58,7 @@ class Vector(var x : Float, var y : Float, var z : Float) {
     operator fun minus(other : Vector) : Vector = Vector(this.x - other.x, this.y - other.y, this.z - other.z)
     // operator*
     operator fun times(other : Float) : Vector = Vector(this.x * other, this.y * other, this.z * other)
-    operator fun Float.times(other: Vector) : Vector = (this * other)
+    operator fun Float.times(other: Vector) : Vector = (other * this)
     // operator/
     operator fun div(other : Vector) : Vector = Vector(this.x / other.x, this.y / other.y, this.z / other.z)
     operator fun div(other : Float) : Vector {

@@ -1,4 +1,2 @@
 Java.gitignore
-
-[O/o]ut/
-.idea/workspace.xml
+JetBrains.gitignore
