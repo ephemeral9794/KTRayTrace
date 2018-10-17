@@ -26,17 +26,17 @@ class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float =
         val BLUE = Color(0.0f, 0.0f, 1.0f)
     }
 
-    constructor(color : Color) : this(color.red, color.green, color.blue) {}
-    constructor(intensity : Float) : this(intensity, intensity, intensity) {}
+    constructor(color : Color) : this(color.red, color.green, color.blue)
+    constructor(intensity : Float) : this(intensity, intensity, intensity)
 
     fun clamp(max : Float = 1.0f, min : Float = 0.0f) : Color {
-        red = clamp(red, min, max);
-        green = clamp(green, min, max);
-        blue = clamp(blue, min, max);
-        return this;
+        red = clamp(red, min, max)
+        green = clamp(green, min, max)
+        blue = clamp(blue, min, max)
+        return this
     }
     fun lerp(t: Float, c1: Color, c2: Color): Color {
-        return c1 * (1.0f - t) + c2 * t
+        return (1.0f - t) * c1 + t * c2
     }
 
     // operator-
@@ -48,6 +48,7 @@ class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float =
     // operator*
     operator fun times(other : Color) : Color = Color(this.red * other.red, this.green * other.green, this.blue * other.blue)
     operator fun times(other : Float) : Color = Color(this.red * other, this.green * other, this.blue * other)
+    operator fun Float.times(other: Color) : Color = (this * other)
     // operator/
     operator fun div(other : Color) : Color = Color(this.red / other.red, this.green / other.green, this.blue / other.blue)
     operator fun div(other : Float) : Color {
@@ -67,7 +68,7 @@ class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float =
         return red.hashCode() xor green.hashCode() xor blue.hashCode()
     }
     override fun toString(): String {
-        return "[$red,$green,$blue]";
+        return "[$red,$green,$blue]"
     }
 }
 
@@ -78,7 +79,7 @@ class Image(width : Int, height : Int, back : Color = Color.BLACK) {
     init {
         this.width = width
         this.height = height
-        pixels = Array(width, { Array<Color>(height, { back }) })
+        pixels = Array(width, { Array(height, { back }) })
     }
 
     // operator overload
@@ -101,11 +102,11 @@ class Image(width : Int, height : Int, back : Color = Color.BLACK) {
             stream.write("255\n".toByteArray())
             for (y in 0 until height) {
                 for (x in 0 until width) {
-                    val color = pixels[x][y];
-                    color.clamp();
-                    val r = floatToByte(color.red);
-                    val g = floatToByte(color.green);
-                    val b = floatToByte(color.blue);
+                    val color = pixels[x][y]
+                    color.clamp()
+                    val r = floatToByte(color.red)
+                    val g = floatToByte(color.green)
+                    val b = floatToByte(color.blue)
                     stream.write(byteArrayOf(r, g, b))
                 }
             }
