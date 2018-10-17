@@ -7,14 +7,16 @@ fun main(args: Array<String>) {
     } else {
         ""
     }
-    println("file : ${filename}")
+    println("file : $filename")
     if (filename == "") {
         usage()
         return
     }
 
-    var image = Image(10, 10, Color.BLACK)
+    val image = Image(10, 10, Color.BLUE)
     image[5, 5] = Color.WHITE
+    image[2, 3] = Color.RED
+    image.export(filename)
 }
 
 fun usage() {

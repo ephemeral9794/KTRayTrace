@@ -1,27 +1,22 @@
 package com.ephemeral.ktraytrace
 
 import kotlin.io.*
-import java.io.*;
+import java.io.*
 
-fun clamp(input: Float, min: Float, max: Float): Float {
-    return if (input > max) {
-        max
-    } else if (input < min) {
-        min
-    } else {
-        input
-    }
+// utility
+fun clamp(input: Float, min: Float, max: Float): Float = when{
+        (input > max) -> max
+        (input < min) -> min
+        else -> input
 }
-fun FloatToByte(inValue:Float):Byte {
-    return if (inValue <= 0.0f)
-        0.toByte()
-    else if (inValue > 1.0f - 0.5f / 255.0f)
-        255.toByte()
-    else
-        (255.0f * inValue + 0.5f).toByte()
+fun floatToByte(inValue:Float):Byte = when {
+        (inValue <= 0.0f) -> 0.toByte()
+        (inValue > 1.0f - 0.5f / 255.0f) -> 255.toByte()
+        else -> (255.0f * inValue + 0.5f).toByte()
 }
 
 class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float = 0.0f) {
+    // default colors
     companion object {
         val WHITE = Color(1.0f, 1.0f, 1.0f)
         val BLACK = Color(0.0f, 0.0f, 0.0f)
@@ -76,23 +71,49 @@ class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float =
     }
 }
 
-class Image(val width : Int, val height : Int) {
-    val pixels : Array<Array<Color?>>
+class Image(width : Int, height : Int, back : Color = Color.BLACK) {
+    val width: Int
+    val height : Int
+    val pixels : Array<Array<Color>>
     init {
-        pixels = Array(width, {arrayOfNulls<Color>(height)})
-    }
-    constructor(width : Int, height : Int, back : Color) : this(width, height) {
-        for (y in 0..height) {
-            for (x in 0..width) {
-                pixels[x][y] = back.clamp()
-            }
-        }
+        this.width = width
+        this.height = height
+        pixels = Array(width, { Array<Color>(height, { back }) })
     }
 
+    // operator overload
     operator fun get(x : Int, y : Int) : Color {
-        return pixels[x][y] as Color
+        return pixels[x][y]
     }
     operator fun set(x : Int, y : Int, element : Color) {
         pixels[x][y] = element
+    }
+
+    fun export(path : String) : Boolean {
+        try {
+            val file = File(path)
+            if (!file.exists()) {
+                file.createNewFile()
+            }
+            val stream = file.outputStream()
+            stream.write("P6\n".toByteArray())
+            stream.write("$width $height\n".toByteArray())
+            stream.write("255\n".toByteArray())
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    val color = pixels[x][y];
+                    color.clamp();
+                    val r = floatToByte(color.red);
+                    val g = floatToByte(color.green);
+                    val b = floatToByte(color.blue);
+                    stream.write(byteArrayOf(r, g, b))
+                }
+            }
+            stream.close()
+            return true
+        } catch (e : Exception) {
+            e.printStackTrace()
+            return false
+        }
     }
 }
