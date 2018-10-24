@@ -1,5 +1,5 @@
 package com.ephemeral.ktraytrace
 
-interface Shape {
+interface IShape {
     fun intersect(ray: Ray, near: Float, far: Float) : Hit?
 }

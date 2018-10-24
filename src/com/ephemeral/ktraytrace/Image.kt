@@ -4,7 +4,12 @@ import kotlin.io.*
 import java.io.*
 
 // utility
-fun clamp(input: Float, min: Float, max: Float): Float = when{
+fun clamp(input: Int, min : Int, max : Int) : Int = when {
+    (input > max) -> max
+    (input < min) -> min
+    else -> input
+}
+fun clamp(input: Float, min: Float, max: Float): Float = when {
         (input > max) -> max
         (input < min) -> min
         else -> input
@@ -14,6 +19,7 @@ fun floatToByte(inValue:Float):Byte = when {
         (inValue > 1.0f - 0.5f / 255.0f) -> 255.toByte()
         else -> (255.0f * inValue + 0.5f).toByte()
 }
+operator fun Float.times(other: Color) : Color = (other * this)
 
 class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float = 0.0f) {
     // default colors
@@ -48,7 +54,6 @@ class Color(var red : Float = 0.0f, var green : Float = 0.0f, var blue : Float =
     // operator*
     operator fun times(other : Color) : Color = Color(this.red * other.red, this.green * other.green, this.blue * other.blue)
     operator fun times(other : Float) : Color = Color(this.red * other, this.green * other, this.blue * other)
-    operator fun Float.times(other: Color) : Color = (other * this)
     // operator/
     operator fun div(other : Color) : Color = Color(this.red / other.red, this.green / other.green, this.blue / other.blue)
     operator fun div(other : Float) : Color {
