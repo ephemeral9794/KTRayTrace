@@ -1,3 +1,3 @@
 package com.ephemeral.ktraytrace
 
-data class Hit(var t : Float, var p : Vector, var normal : Vector)
+data class Hit(var t : Double, var point : Vector, var normal : Vector, var obj : IShape)

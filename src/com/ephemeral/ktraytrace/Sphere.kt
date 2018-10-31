@@ -1,36 +1,32 @@
 package com.ephemeral.ktraytrace
 
-import java.lang.Math.pow
 import kotlin.math.*
 
-class Sphere(var center : Vector, var radius : Float) : IShape {
-    override fun intersect(ray : Ray, near : Float, far : Float) : Hit? {
-        val oc = ray.origin - center
-        val a = dot(ray.direct, ray.direct)
-        val b = 2.0f * dot(ray.direct, oc)
-        val c = dot(oc, oc) - radius * radius
-        val D = b * b - 4 * a * c
+class Sphere(val center : Vector, val radius : Double, val reflect : Vector) : IShape {
+    override fun intersect(ray : Ray, near : Double, far : Double) : Hit? {
+        val op : Vector = center - ray.origin
+        val b = dot(op, ray.direct)
+        val det = b * b - dot(op, op) + radius * radius
+        if (det < 0)
+            return null
 
-        var hit : Hit? = null
-        if (D > 0) {
-            // y = (-b - √D) / 2a
-            val root = sqrt(D)
-            var temp = (-b - root) / (2.0f * a)
-            if (temp > near && temp < far) {
-                hit = Hit(temp, Vector(), Vector())
-                hit.p = ray.origin + ray.direct * hit.t
-                hit.normal = (hit.p - center).normalize()
-                return hit
-            }
-            // y = (-b + √D) / 2a
-            temp = (-b + root) / (2.0f * a)
-            if (temp > near && temp < far) {
-                hit = Hit(temp, Vector(), Vector())
-                hit.p = ray.origin + ray.direct * hit.t
-                hit.normal = (hit.p - center).normalize()
-                return hit
-            }
+        var hit : Hit?
+        val t1 = b - sqrt(det)
+        if (near < t1 && t1 < far) {
+            hit = Hit(t1, Vector(), Vector(), this)
+            hit.point = ray.origin + ray.direct * t1
+            hit.normal = (hit.point - center).normalize()// / radius
+            return hit
         }
-        return hit
+        val t2 = b + sqrt(det)
+        if (near < t2 && t2 < far) {
+            hit = Hit(t1, Vector(), Vector(), this)
+            hit.point = ray.origin + ray.direct * t2
+            hit.normal = (hit.point - center).normalize()// / radius
+            return hit
+        }
+        return null
     }
+
+    override fun toString(): String = "Sphere($center, $radius)"
 }
