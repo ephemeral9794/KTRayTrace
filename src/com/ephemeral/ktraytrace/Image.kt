@@ -19,6 +19,7 @@ class Color(var red : Double, var green : Double, var blue : Double) {
     companion object {
         val BLACK = Color(0.0, 0.0, 0.0)
         val WHITE = Color(1.0, 1.0, 1.0)
+        val GRAY = Color(0.5,0.5,0.5)
     }
 
     constructor() : this(BLACK)
